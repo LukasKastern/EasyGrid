@@ -20,6 +20,7 @@ Just subscribe an action to the desired EventType and you are good to go.
 ```csharp
 EventTrigger.AddEventTrigger(TriggerEvent.OnMouseDown, onMouseDown);
 ```
+Grid Graphics also support Drag and Drop inside the viewport by setting **CanDrag** to true.
 
 ## How-To
 
