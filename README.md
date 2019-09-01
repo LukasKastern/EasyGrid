@@ -10,7 +10,7 @@ The Grid supports moving and zooming inside the viewport.
 ### Graphic Elements
 
 Currently we have a **GridLabel** class to display text and a **GridTexture**. <br>
-You can easily create your own Graphic elements by inherting by **GridGraphic** and overriding the draw method.
+You can easily create your own Graphic elements by inheriting **GridGraphic** and overriding the draw method.
 
 #### Receiving Input
 
