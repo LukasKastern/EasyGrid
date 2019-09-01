@@ -2,7 +2,7 @@
 
 Easy Grid is the solution for displaying grids inside EditorWindows in Unity.
 
-[ShowCase](https://github.com/LukasKastern/EasyGrid/raw/master/showcase.gif)
+![ShowCase](https://github.com/LukasKastern/EasyGrid/raw/master/showcase.gif)
 
 
 ### Navigation
