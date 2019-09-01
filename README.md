@@ -1,5 +1,4 @@
 # EasyGrid
-# CommandConsole
 
 Easy Grid is the solution for displaying grids inside EditorWindows in Unity.
 
