@@ -2,6 +2,9 @@
 
 Easy Grid is the solution for displaying grids inside EditorWindows in Unity.
 
+![Output sample](https://github.com/LukasKastern/EasyGrid/raw/master/showcase.gif)
+
+
 ### Navigation
 
 The Grid supports moving and zooming inside the viewport.
