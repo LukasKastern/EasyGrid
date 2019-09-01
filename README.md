@@ -1,6 +1,6 @@
 # EasyGrid
 
-Easy Grid is the solution for displaying grids inside EditorWindows in Unity.
+Easy Grid is an extension for EditorWindows in Unity to display Grids.
 
 ![ShowCase](https://github.com/LukasKastern/EasyGrid/raw/master/showcase.gif)
 
