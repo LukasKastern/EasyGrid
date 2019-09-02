@@ -1,5 +1,8 @@
+using System.IO;
 using System.Linq;
+using UnityEditor;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 namespace EasyGrid
 {
@@ -46,8 +49,7 @@ namespace EasyGrid
             EventTrigger.AddEventTrigger(TriggerEvent.StartedDrag, StartedDrag);
             EventTrigger.AddEventTrigger(TriggerEvent.Drag, Drag);
         }
-    
-      
+
         public virtual void Draw(float currentZoom)
         {
         }

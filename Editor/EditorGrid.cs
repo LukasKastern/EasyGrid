@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using UnityEditor;
+using UnityEditor.StyleSheets;
 using UnityEngine;
 
 namespace EasyGrid
@@ -17,7 +18,7 @@ namespace EasyGrid
             }
         }
 
-        public const float LineSpacing = 20;
+        public const float LineSpacing = 10;
 
         public static GridView ActiveView;
 
@@ -29,7 +30,9 @@ namespace EasyGrid
 
         public static float ZoomedSpacing => LineSpacing * ZoomFactor;
 
-        public static Color BackGroundGridLineColor { get; set; } = new Color(Color.grey.r, Color.grey.g, Color.grey.b,  0.4f);
+        public static Color BackGroundGridLineColor { get; set; } =
+            new Color(Color.grey.r, Color.grey.g, Color.grey.b, 0.4f);
+
         public static Color MainGridLineColor { get; set; } = Color.black;
 
         /// <summary>
@@ -42,16 +45,28 @@ namespace EasyGrid
         /// </summary>
         public static bool IsOutlineActive;
 
-        private static double XLineOffset =>
+        public static Color BackgroundColor;
+        
+        public static double XLineOffset =>
             (ActiveView.CurrentViewPortCenter.x / GridView.ViewPortUnit -
              Math.Truncate(ActiveView.CurrentViewPortCenter.x / GridView.ViewPortUnit)) * LineSpacing * ZoomFactor;
 
-        private static double YLineOffset =>
+        public static double YLineOffset =>
             (ActiveView.CurrentViewPortCenter.y / GridView.ViewPortUnit -
              Math.Truncate(ActiveView.CurrentViewPortCenter.y / GridView.ViewPortUnit)) * LineSpacing * ZoomFactor;
 
-        public static float GridWidth;
-        public static float GridHeight;
+        public static float GridWidth
+        {
+            get => _gridWidth;
+            private set => _gridWidth = value;
+        }
+
+        public static float GridHeight
+        {
+            get => _gridHeight;
+            private set => _gridHeight = value;
+        }
+
 
         /// <summary>
         /// This is the position where the grid is going to be drawn,
@@ -64,10 +79,12 @@ namespace EasyGrid
 
         private static float ZoomFactor => ActiveView.ZoomFactor;
 
+        private static Texture2D _backgroundTexture;
+
         /// <summary>
         /// Every x lines comes a line in the main grid color
         /// </summary>
-        private const int MainLineEvery = 5;
+        private const int MainLineEvery = 10;
 
         private static EditorWindow _editor;
 
@@ -77,6 +94,8 @@ namespace EasyGrid
         private const float LabelSize = 25;
 
         private static ViewPort _viewPort;
+        private static float _gridWidth;
+        private static float _gridHeight;
 
         /// <summary>
         /// Initializes the grid with the given Editor
@@ -89,6 +108,11 @@ namespace EasyGrid
             _editor.wantsMouseEnterLeaveWindow = true;
 
             ActiveView = new GridView();
+            
+            _backgroundTexture = new Texture2D(1, 1);
+            _backgroundTexture.wrapMode = TextureWrapMode.Repeat;
+            _backgroundTexture.SetPixel(0, 0, BackgroundColor);
+            _backgroundTexture.Apply();
         }
 
         /// <summary>
@@ -96,6 +120,8 @@ namespace EasyGrid
         /// </summary>
         private static void DrawGrid()
         {
+            DrawBackground();
+
             var lineSpacing = LineSpacing * ZoomFactor;
 
             var relativeLineX = Math.Truncate(ActiveView.CurrentViewPortCenter.x) / GridView.ViewPortUnit;
@@ -129,6 +155,18 @@ namespace EasyGrid
 
             if (IsOutlineActive)
                 DrawGridOutline();
+            
+            
+        }
+
+        private static void DrawBackground()
+        {
+            var style = new GUIStyle();
+            style.normal.background = _backgroundTexture;
+
+            var viewPortRect = new Rect(GridPosition.x, GridPosition.y, _gridWidth, _gridHeight);
+
+            GUI.Box(viewPortRect, GUIContent.none, style);
         }
 
         /// <summary>
@@ -164,7 +202,7 @@ namespace EasyGrid
         public static bool IsInViewportEditorSpace(Vector2 topLeft, Vector2 bottomRight)
         {
             var topleftViewportPoint = new Vector2(GridPosition.x, GridPosition.y);
-            var bottomRightViewportPoint = new Vector2(GridWidth, GridHeight);
+            var bottomRightViewportPoint = new Vector2(GridPosition.x + GridWidth, GridPosition.y + GridHeight);
             
             if (topLeft.x >= bottomRightViewportPoint.x || topleftViewportPoint.x >= bottomRight.x)
                 return false;
@@ -192,9 +230,13 @@ namespace EasyGrid
                 var 
                    Right = bounds.x + width;
 
-                x = GridPosition.x;
+                //x = GridPosition.x;
 
-                rectWidth -= Mathf.Clamp(width - (Right - GridPosition.x), 0, width);
+                var amountToCutOff = Mathf.Clamp(width - (Right - GridPosition.x), 0, width);
+
+                rectWidth -= amountToCutOff; //Mathf.Clamp(width - (Right - GridPosition.x), 0, width);
+
+                x = bounds.x + amountToCutOff;
             }
 
             else if ((x + rectWidth) > (GridPosition.x + GridWidth))
@@ -242,7 +284,7 @@ namespace EasyGrid
 
             Handles.BeginGUI();
             Handles.color = color;
-            Handles.DrawLine(start + GridPosition, end + GridPosition);
+            Handles.DrawLine(start + GridPosition, end + GridPosition) ;
             Handles.EndGUI();
         }
 
@@ -298,12 +340,17 @@ namespace EasyGrid
             ActiveView.Reset();
 
         }
-
         private static void UpdateViewport()
         {
             GridPosition = new Vector2(_editor.position.width * _viewPort.X, _editor.position.height * _viewPort.Y);
-            GridWidth = _viewPort.Width * _editor.position.width;
-            GridHeight = _viewPort.Height * _editor.position.height;
+
+            var newViewPortWidth = _viewPort.Width * _editor.position.width;
+            var newViewPortHeight = _viewPort.Height * _editor.position.height;
+            
+            GridWidth = newViewPortWidth;
+            GridHeight = newViewPortHeight;
+            
+            
         }
 
         /// <summary>

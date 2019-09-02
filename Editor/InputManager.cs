@@ -55,10 +55,9 @@ namespace EasyGrid
 
             if (_eventTrigger != triggerUnderCursor)
             {
-                OnTriggerUnderCursorChanged(triggerUnderCursor);
+               OnTriggerUnderCursorChanged(triggerUnderCursor);
             }
-
-            //Make sure that we only process input which is made inside the viewport
+            
             if (!EditorGrid.IsInViewportEditorSpace(_mousePosition.TopLeft.GetPosition(), _mousePosition.BottomRight.GetPosition()))
                 return;
             

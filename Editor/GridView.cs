@@ -4,7 +4,7 @@ namespace EasyGrid
 {
     public class GridView
     {
-        public const float ViewPortUnit = 20f;
+        public const float ViewPortUnit = 10f;
 
         public Vector2 CurrentViewPortCenter { get; private set; }
 
