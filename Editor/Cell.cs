@@ -28,12 +28,7 @@ namespace EasyGrid
         {
             var line = (int)Math.Truncate((screenPoint.y - EditorGrid.GridPosition.y - EditorGrid.ActiveView.CurrentViewPortCenter.y * EditorGrid.ActiveView.ZoomFactor) / EditorGrid.ZoomedSpacing);
             var column = (int)Math.Truncate((screenPoint.x - EditorGrid.GridPosition.x - EditorGrid.ActiveView.CurrentViewPortCenter.x * EditorGrid.ActiveView.ZoomFactor) / EditorGrid.ZoomedSpacing);
-        
-            // line = Math.Truncate(screnpoint - ViewPort) / ZoomedSpacing | * zoomedSpacing
-            // line * zoomedSpacing = Math.Trunctate (ScreenPoint -Viewport) | + CurrentViewport
-            // Line * zoomedSpacing + CurrentViewPort = ScreenPoint
-            // 
-        
+
             return new Cell(column, line);
         }
     

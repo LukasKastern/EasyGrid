@@ -6,7 +6,7 @@ namespace EasyGrid
     {
         private Texture _texture;
 
-        private Vector2 _currentGridPosition => Bounds.TopLeft.GetPosition();
+        private Vector2 _currentGridPosition => Transform.Position.GetPosition();
         
         public GridTexture(Cell position, int width, int height, Texture texture) : base(position, width, height)
         {
@@ -19,21 +19,21 @@ namespace EasyGrid
         /// <returns></returns>
         private Rect GetTextureCoordinates(Rect rectInViewport)
         {
-            var xCoordinate = (1 - rectInViewport.width / (Bounds.Width * EditorGrid.ZoomedSpacing));
+            var xCoordinate = (1 - rectInViewport.width / (Transform.ZoomedBounds.Width));
             var width = 1 - xCoordinate;
-            var height = rectInViewport.height / (Bounds.Height * EditorGrid.ZoomedSpacing);
+            var height = rectInViewport.height / (Transform.ZoomedBounds.Height);
 
             var yCoordinate = 0f;
             
-            if((_currentGridPosition.x + Bounds.Width * EditorGrid.ZoomedSpacing) > (EditorGrid.GridPosition.x + EditorGrid.GridWidth))
+            if((_currentGridPosition.x + Transform.ZoomedBounds.Width) > (EditorGrid.GridPosition.x + EditorGrid.GridWidth))
             {
                 xCoordinate = 0;
             }
 
-            if (_currentGridPosition.y + Bounds.Height * EditorGrid.ZoomedSpacing >
+            if (_currentGridPosition.y + Transform.ZoomedBounds.Height >
                 EditorGrid.GridPosition.y + EditorGrid.GridHeight)
             {
-                yCoordinate = (1 - rectInViewport.height / (Bounds.Height * EditorGrid.ZoomedSpacing));
+                yCoordinate = (1 - rectInViewport.height / (Transform.ZoomedBounds.Height));
             }
             
             return new Rect(xCoordinate, yCoordinate, width, height);
@@ -41,8 +41,7 @@ namespace EasyGrid
     
         public override void Draw(float currentZoom)
         {
-            var rectInViewport = EditorGrid.GetRectInViewport(new Vector2(_currentGridPosition.x, _currentGridPosition.y),
-                Bounds.Width * EditorGrid.ZoomedSpacing, Bounds.Height * EditorGrid.ZoomedSpacing);
+            var rectInViewport = Transform.GetRectInViewport();
             
             GUI.DrawTextureWithTexCoords(rectInViewport, _texture, GetTextureCoordinates(rectInViewport));
         }

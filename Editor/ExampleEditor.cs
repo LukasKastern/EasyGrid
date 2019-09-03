@@ -33,24 +33,25 @@ namespace EasyGrid
             EditorGrid.IsOutlineActive = true;
             EditorGrid.GridOutlineColor = Color.blue;
             
-           // CreateATextureGraphic(Texture2D.whiteTexture, new Cell(0, 0), 1, 1);
+            //--Some Performance Testing--//
+            /*
+            for (int i = 0; i < 100 ; ++i)
+            {
+                var bigTexture = new GridTexture(new Cell(-10, -10), 40, 20, Texture2D.whiteTexture) {IsInteractable = true, CanDrag = true};
+
+                //texture.Transform.Parent = bigTexture.Transform;
             
-            CreateATextureGraphic(GetNodeTexture(), new Cell(0, 0), 20, 10);
-            //CreateATextureGraphic(Texture2D.whiteTexture, new Cell(0, 0), 10, 5);
+                var label = new GridLabel(new Cell(1, 0));
 
+                label.SetFontSize(3);
+
+                label.Content = "I'm a Label!";
+            
+                label.Transform.Parent = bigTexture.Transform;
+            }
+            */
         }
 
-        private Texture2D GetNodeTexture()
-        {
-            return Resources.Load<Texture2D>("DefaultNodeTexture");
-        }
-
-        private void CreateATextureGraphic(Texture texture, Cell cell, int width, int length)
-        {
-            new GridTexture(cell, width, length, texture) {IsInteractable = true, CanDrag = true};
-        }
-
-    
         protected void OnGUI()
         {
             EditorGrid.Update();

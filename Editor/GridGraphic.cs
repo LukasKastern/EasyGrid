@@ -1,5 +1,7 @@
+using System;
 using System.IO;
 using System.Linq;
+using TMPro;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -9,9 +11,7 @@ namespace EasyGrid
     public class GridGraphic
     {
         private Texture _texture;
-
-        public CellBounds Bounds;
-
+        
         public bool IsActive { get; set; }
     
         public bool IsInteractable
@@ -21,7 +21,7 @@ namespace EasyGrid
             set { _isInteractable = true; }
         }
 
-        private bool _isInteractable;
+        public GridEventTrigger EventTrigger { get; private set; }
 
         public bool CanDrag
         {
@@ -29,21 +29,28 @@ namespace EasyGrid
             set => _isDraggable = value;
         }
 
+        public GridTransform Transform { get; private set; }
+
+        //public CellBounds Bounds => Transform.LocalBounds;
+        
+        private bool _isInteractable;
+
         private bool _isDraggable;
 
         private Cell _dragStartOffset;
-    
-        public GridEventTrigger EventTrigger { get; private set; }
-
+        
+        
+        
         /// <summary>
         /// Width and Height are in cells
         /// </summary>
         public GridGraphic(Cell position, int width, int height)
         {
+            Transform = new GridTransform(new CellBounds(position, width, height));
+
             IsActive = true;
 
             Hierarchy.AddGraphic(this);
-            Bounds = new CellBounds(position, width, height);
         
             EventTrigger = new GridEventTrigger();
             EventTrigger.AddEventTrigger(TriggerEvent.StartedDrag, StartedDrag);
@@ -71,7 +78,7 @@ namespace EasyGrid
         
             var screenPointCell = Cell.FromScreenPoint(EditorGrid.MouseRelativeToActiveEditor);
         
-            _dragStartOffset = Bounds.TopLeft - screenPointCell;
+            _dragStartOffset = Transform.ZoomedBounds.TopLeft - screenPointCell;
             
         }
     
@@ -82,7 +89,9 @@ namespace EasyGrid
         
             var desiredPosition = Cell.FromScreenPoint(EditorGrid.MouseRelativeToActiveEditor) + _dragStartOffset;
         
-            Bounds.TopLeft = desiredPosition;
+            Transform.SetGlobalPosition(desiredPosition);
+            
+            //Transform.LocalBounds.TopLeft = desiredPosition;
         
         }
 
@@ -93,7 +102,7 @@ namespace EasyGrid
         /// <returns></returns>
         private bool ValidateDragPosition(Cell positionToValidate)
         {
-            return Hierarchy.GetGraphicsInArea(new CellBounds(positionToValidate, Bounds.Width, Bounds.Height)).Count(i => i != this) == 0;
+            return Hierarchy.GetGraphicsInArea(new CellBounds(positionToValidate, Transform.Width, Transform.Height)).Count(i => i != this) == 0;
         }
         
         #endregion

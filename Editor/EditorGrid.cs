@@ -359,12 +359,12 @@ namespace EasyGrid
         public static void Update()
         {
             UpdateViewport();
-
-            InputManager.ProcessInput();
-
+            
             DrawGrid();
             DrawGraphics();
-
+            
+            InputManager.ProcessInput();
+            
             if (DoRepaint)
                 _editor.Repaint();
         }

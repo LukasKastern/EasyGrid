@@ -30,7 +30,7 @@ namespace EasyGrid
 
         public static IEnumerable<GridGraphic> GetGraphicsInArea(CellBounds area)
         {
-            return GetGraphics().Where(graphic => graphic.Bounds.Intersects(area));
+            return GetGraphics().Where(graphic => graphic.Transform.Bounds.Intersects(area));
         }
 
         public static IEnumerable<GridEventTrigger> GetActiveEventTriggers()

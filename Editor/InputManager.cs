@@ -143,21 +143,5 @@ namespace EasyGrid
             _mousePosition.TopLeft = Cell.FromScreenPoint(e.mousePosition);
         }
     }
-
-    public static class DragManager
-    {
-        private static Cell _dragStartOffset;
     
-        public static void OnStartDrag(GridGraphic graphic)
-        {            
-            var screenPointCell = Cell.FromScreenPoint(EditorGrid.MouseRelativeToActiveEditor);
-        
-            _dragStartOffset = graphic.Bounds.TopLeft - screenPointCell;
-        }
-
-        public static void DragGraphic(GridGraphic graphic)
-        {
-            graphic.Bounds.TopLeft = Cell.FromScreenPoint(EditorGrid.MouseRelativeToActiveEditor) + _dragStartOffset;
-        }
-    }
 }
